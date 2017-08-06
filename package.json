@@ -1,0 +1,32 @@
+{
+  "name": "react-express",
+  "version": "1.0.0",
+  "description": "React app with express middleware",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IvanShastin/react-express.git"
+  },
+  "keywords": [
+    "React",
+    "Node",
+    "Express"
+  ],
+  "author": "Ivan Shastin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/IvanShastin/react-express/issues"
+  },
+  "homepage": "https://github.com/IvanShastin/react-express#readme",
+  "dependencies": {
+    "connect-flash": "^0.1.1",
+    "connect-redis": "^3.3.0",
+    "ejs": "^2.5.7",
+    "express": "^4.15.3",
+    "express-partials": "^0.3.0",
+    "redis": "^2.7.1"
+  }
+}
