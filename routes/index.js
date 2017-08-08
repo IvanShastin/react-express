@@ -1,4 +1,5 @@
 const util = require('../middleware/utilities');
+const config = require('../config');
 
 function index(req, res) {
   res.render("index", {
@@ -7,12 +8,17 @@ function index(req, res) {
 }
 
 function login(req, res) {
-  res.render("Login", { title: "Login" });
+  res.render("Login", { title: "Login", message: req.flash('error') });
 }
 
 function loginProcess(req, res) {
   var isAuth = util.auth(req.body.username, req.body.password, req.session);
-  isAuth ? res.redirect('/chat') : res.redirect('/login');
+  if(isAuth) {
+    res.redirect('/chat');
+  } else {
+    req.flash('error', 'UserName or Password is invalid');
+    res.redirect(config.routes.login);
+  }
 };
 
 function chat(req, res) {

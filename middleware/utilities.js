@@ -1,3 +1,10 @@
+const config = require('../config');
+
+module.exports.templateRoutes = function templateRoutes(request, response, next) {
+  response.locals.routes = config.routes;
+  next();
+}
+
 module.exports.csrf = function csrf(request, response, next) {
   response.locals.token = request.csrfToken();
   next();
@@ -18,7 +25,7 @@ module.exports.requireAuthentication = function requireAuthentication(
   if (request.session.isAuthenticated) {
     next();
   } else {
-    response.redirect(301, "/login");
+    response.redirect(301, config.routes.login);
   }
 };
 

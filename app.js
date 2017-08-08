@@ -7,13 +7,17 @@ var partials = require("express-partials");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const RedisStore = require('connect-redis')(session);
-const redisOptions = {
-  url: 'redis://localhost',
-  port: 6379
-}
+
 const bodyParser = require('body-parser');
 const csrf = require('csurf');
 const util = require('./middleware/utilities');
+const flash = require('connect-flash');
+const config = require('./config');
+
+const redisOptions = {
+  url: config.redisUrl,
+  port: config.redisPort
+}
 
 app.use(partials());
 app.set("view engine", "ejs");
@@ -21,15 +25,17 @@ app.set("view options", { defaultLayout: "layout" });
 
 app.use(logger.logger);
 app.use(express.static(__dirname + "/public"));
-app.use(cookieParser('secret'));
+app.use(cookieParser(config.secret));
 app.use(
   session({
-    secret: "secret",
+    secret: config.secret,
     saveUninitialized: true,
     resave: true,
     store: new RedisStore(redisOptions)
   })
 );
+app.use(flash());
+app.use(util.templateRoutes);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(csrf());
@@ -46,10 +52,10 @@ app.use((request, response, next) => {
 });
 
 app.get("/", routes.index);
-app.get("/login", routes.login);
+app.get(config.routes.login, routes.login);
 app.get("/account/login", routes.login);
-app.post("/login", routes.loginProcess);
-app.get('/logout', routes.logout);
+app.post(config.routes.login, routes.loginProcess);
+app.get(config.routes.logout, routes.logout);
 app.get("/chat", [util.requireAuthentication], routes.chat);
 app.get("/error", (request, response, next) => {
   next(new Error("A contrived error"));
@@ -58,6 +64,6 @@ app.get("/error", (request, response, next) => {
 app.use(errorHandlers.error);
 app.use(errorHandlers.notFound);
 
-app.listen(3000);
+app.listen(config.port);
 
 console.log("App running");
